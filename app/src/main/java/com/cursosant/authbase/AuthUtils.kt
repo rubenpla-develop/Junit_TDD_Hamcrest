@@ -19,10 +19,18 @@ fun userAuthentication(email: String, password: String): Boolean {
 }
 
 fun userAuthenticationTDD(email: String?, password: String?): AuthEvent {
+    val isInvalidEmail = email?.isNotEmpty() == true && !isEmailValid(email)
+    val isInvalidPassword = password?.isNotEmpty() == true && !isValidPassword(password)
+
+    if (isInvalidEmail && isInvalidPassword) return AuthEvent.INVALID_USER
+    if (isInvalidEmail) return AuthEvent.INVALID_EMAIL
+    if (isInvalidPassword) return AuthEvent.INVALID_PASSWORD
+
     if (email?.isEmpty() == true && password?.isEmpty() == true) return AuthEvent.EMPTY_FORM
     if (email?.isEmpty() == true) return AuthEvent.EMPTY_EMAIL
     if (password?.isEmpty() == true) return AuthEvent.EMPTY_PASSWORD
 
+    if (email != "ant@gmail.com") return AuthEvent.USER_NOT_EXISTS
     if (email == "ant@gmail.com" && password == "1234"){
         return AuthEvent.USER_EXISTS
     }
@@ -30,7 +38,13 @@ fun userAuthenticationTDD(email: String?, password: String?): AuthEvent {
     return AuthEvent.UNKNOWN_EVENT
 }
 
-fun isEmailValid(email: String): Boolean {
+fun isEmailValid(email: String?): Boolean {
     val EMAIL_REGEX = "^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})"
-    return EMAIL_REGEX.toRegex().matches(email);
+    return email?.let { EMAIL_REGEX.toRegex().matches(it) } == true;
+}
+
+fun isValidPassword(password: String?): Boolean {
+    if (password?.toIntOrNull() == null) return false
+
+    return true
 }

@@ -7,7 +7,7 @@ import org.junit.Test
 
 class AuthTDDTest {
 
-    private var email : String? = null
+    private var email: String? = null
     private var password: String? = null
 
     @Before
@@ -28,49 +28,64 @@ class AuthTDDTest {
         assertEquals(AuthEvent.USER_EXISTS, isAuthenticated)
     }
 
-   @Test
+    @Test
     fun login_completeForm_notExistUser_returnsFailEvent() {
-       email = "an@gmail.com"
-       val isAuthenticated = userAuthenticationTDD(email, password)
-       assertEquals(AuthEvent.USER_NOT_EXISTS, isAuthenticated)
+        email = "an@gmail.com"
+        val isAuthenticated = userAuthenticationTDD(email, password)
+        assertEquals(AuthEvent.USER_NOT_EXISTS, isAuthenticated)
     }
 
     @Test
     fun login_emptyEmail_returnsFailEvent() {
-       email = ""
-       val isAuthenticated = userAuthenticationTDD(email, email)
-       assertEquals(AuthEvent.EMPTY_EMAIL, isAuthenticated)
+        email = ""
+        val isAuthenticated = userAuthenticationTDD(email, "1234")
+        assertEquals(AuthEvent.EMPTY_EMAIL, isAuthenticated)
     }
 
     @Test
     fun login_emptyPassword_returnsFailEvent() {
         password = ""
-        val isAuthenticated = userAuthenticationTDD(email,password)
+        val isAuthenticated = userAuthenticationTDD(email, password)
         assertEquals(AuthEvent.EMPTY_PASSWORD, isAuthenticated)
     }
 
-       @Test
-       fun login_emptyForm_returnsFailEvent() {
-           val isAuthenticated = userAuthenticationTDD("", "")
-           assertEquals(AuthEvent.EMPTY_FORM, isAuthenticated)
-       }
+    @Test
+    fun login_emptyForm_returnsFailEvent() {
+        val isAuthenticated = userAuthenticationTDD("", "")
+        assertEquals(AuthEvent.EMPTY_FORM, isAuthenticated)
+    }
 
+    @Test
+    fun login_completeForm_invalidEmail_returnsFailEvent() {
+        val isAuthenticated = userAuthenticationTDD("ant.gmail.com", "1234")
+        assertEquals(AuthEvent.INVALID_EMAIL, isAuthenticated)
+    }
 
-    /*
-       @Test
-       fun login_completeForm_invalidEmail_returnsFailEvent() {}
-       @Test
-       fun login_completeForm_invalidPassword_returnsFailEvent() {}
-       @Test
-       fun login_completeForm_invalidUser_returnsFailEvent() {}
-       @Test
-       fun login_nullEmail_returnsException() {}
-       @Test
-       fun login_nullPassword_returnsException() {}
-       @Test
-       fun login_nullForm_returnsException() {}
-       @Test
-       fun login_completeForm_errorLengthPassword_returnsFailEvent() {}*/
+    @Test
+    fun login_completeForm_invalidPassword_returnsFailEvent() {
+        val isAuthenticated = userAuthenticationTDD("ant@gmail.com", "123E")
+        assertEquals(AuthEvent.INVALID_PASSWORD, isAuthenticated)
+    }
 
+    @Test
+    fun login_completeForm_invalidUser_returnsFailEvent() {
+        val isAuthenticated = userAuthenticationTDD("ant.gmail.com", "123E")
+        assertEquals(AuthEvent.INVALID_USER, isAuthenticated)
+    }
 
+/*    @Test
+    fun login_nullEmail_returnsException() {
+    }
+
+    @Test
+    fun login_nullPassword_returnsException() {
+    }
+
+    @Test
+    fun login_nullForm_returnsException() {
+    }
+
+    @Test
+    fun login_completeForm_errorLengthPassword_returnsFailEvent() {
+    }*/
 }

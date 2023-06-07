@@ -18,11 +18,16 @@ fun userAuthentication(email: String, password: String): Boolean {
     return false
 }
 
-fun userAuthenticationTDD(email: String?, password: String?): Boolean {
+fun userAuthenticationTDD(email: String?, password: String?): AuthEvent {
+    if (email?.isEmpty() == true && password?.isEmpty() == true) return AuthEvent.EMPTY_FORM
+    if (email?.isEmpty() == true) return AuthEvent.EMPTY_EMAIL
+    if (password?.isEmpty() == true) return AuthEvent.EMPTY_PASSWORD
+
     if (email == "ant@gmail.com" && password == "1234"){
-        return true
+        return AuthEvent.USER_EXISTS
     }
-    return false
+
+    return AuthEvent.UNKNOWN_EVENT
 }
 
 fun isEmailValid(email: String): Boolean {

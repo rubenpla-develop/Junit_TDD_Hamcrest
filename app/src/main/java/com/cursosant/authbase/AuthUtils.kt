@@ -19,18 +19,22 @@ fun userAuthentication(email: String, password: String): Boolean {
 }
 
 fun userAuthenticationTDD(email: String?, password: String?): AuthEvent {
+    val maxLength = 4
+    if (email == null && password == null) throw AuthException(AuthEvent.NULL_FORM)
     if (email == null) throw AuthException(AuthEvent.NULL_EMAIL)
+    if (password == null) throw AuthException(AuthEvent.NULL_PASSWORD)
+    if (password.length > maxLength) throw AuthException(AuthEvent.TOO_LONG_PASSWORD)
 
     val isInvalidEmail = email.isNotEmpty() && !isEmailValid(email)
-    val isInvalidPassword = password?.isNotEmpty() == true && !isValidPassword(password)
+    val isInvalidPassword = password.isNotEmpty() && !isValidPassword(password)
 
     if (isInvalidEmail && isInvalidPassword) return AuthEvent.INVALID_USER
     if (isInvalidEmail) return AuthEvent.INVALID_EMAIL
     if (isInvalidPassword) return AuthEvent.INVALID_PASSWORD
 
-    if (email.isEmpty() && password?.isEmpty() == true) return AuthEvent.EMPTY_FORM
+    if (email.isEmpty() && password.isEmpty()) return AuthEvent.EMPTY_FORM
     if (email.isEmpty()) return AuthEvent.EMPTY_EMAIL
-    if (password?.isEmpty() == true) return AuthEvent.EMPTY_PASSWORD
+    if (password.isEmpty()) return AuthEvent.EMPTY_PASSWORD
 
     if (email != "ant@gmail.com") return AuthEvent.USER_NOT_EXISTS
     if (email == "ant@gmail.com" && password == "1234"){

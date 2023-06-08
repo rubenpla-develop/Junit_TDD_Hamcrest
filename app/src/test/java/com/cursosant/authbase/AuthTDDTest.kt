@@ -2,9 +2,9 @@ package com.cursosant.authbase
 
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertThrows
 import org.junit.Before
 import org.junit.Test
-import kotlin.NullPointerException
 
 class AuthTDDTest {
 
@@ -74,21 +74,35 @@ class AuthTDDTest {
         assertEquals(AuthEvent.INVALID_USER, isAuthenticated)
     }
 
-   @Test(expected = AuthException::class)
+    @Test(expected = AuthException::class)
     fun login_nullEmail_returnsException() {
-       val isAuthenticated = userAuthenticationTDD(null, "123E")
-       assertEquals(AuthEvent.NULL_EMAIL, isAuthenticated)
+        val isAuthenticated = userAuthenticationTDD(null, "123E")
+        assertEquals(AuthEvent.NULL_EMAIL, isAuthenticated)
     }
-    /*
-        @Test
-        fun login_nullPassword_returnsException() {
-        }
 
-        @Test
-        fun login_nullForm_returnsException() {
+    @Test
+    fun login_nullPassword_returnsException() {
+        assertThrows(AuthException::class.java) {
+            print(userAuthenticationTDD(email, null))
         }
+    }
 
-        @Test
-        fun login_completeForm_errorLengthPassword_returnsFailEvent() {
-        }*/
+    @Test
+    fun login_nullForm_returnsException() {
+        try {
+            val result = userAuthenticationTDD(null, null)
+            assertEquals(AuthEvent.NULL_FORM, result)
+        } catch (e: Exception) {
+            (e as? AuthException)?.let {
+                assertEquals(AuthEvent.NULL_FORM, it.authEvent)
+            }
+        }
+    }
+
+    @Test
+    fun login_completeForm_errorLengthPassword_returnsFailEvent() {
+        assertThrows(AuthException::class.java) {
+            print(userAuthenticationTDD(email, "1234567689"))
+        }
+    }
 }

@@ -1,7 +1,17 @@
 package com.cursosant.authbase
 
+import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.CoreMatchers.anyOf
+import org.hamcrest.CoreMatchers.both
+import org.hamcrest.CoreMatchers.containsString
+import org.hamcrest.CoreMatchers.endsWith
+import org.hamcrest.CoreMatchers.everyItem
+import org.hamcrest.CoreMatchers.hasItem
 import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.CoreMatchers.not
+import org.hamcrest.CoreMatchers.startsWith
 import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.hasItemInArray
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
@@ -107,5 +117,33 @@ class AuthHamcrestTest {
         Assert.assertThrows(AuthException::class.java) {
             print(userAuthenticationTDD(email, "1234567689"))
         }
+    }
+
+    @Test
+    fun checkNames_differentUser_match() {
+        assertThat("Ruben Pla", both(containsString("Pla"))
+            .and(startsWith("R"))
+            .and(endsWith("a")))
+    }
+
+    @Test
+    fun checkData_emailPassword_notMatch() {
+        assertThat(email, not(`is`(password)))
+    }
+
+    @Test
+    fun checkExists_newEmail_returnsString() {
+        val oldEmail = email!!
+        val newEmail = "ant@cursoandroid.com"
+        val emailList = arrayOf(oldEmail, newEmail, "oldEmailgmail.com")
+        assertThat(emailList, hasItemInArray(newEmail))
+    }
+
+    @Test
+    fun checkDomain_arrayEmails_returnsString() {
+        val oldEmail = email!!
+        val newEmail = "ant@cursoandroid.com"
+        val emailList = arrayListOf(oldEmail, newEmail, "oldEmail@hotmail.com")
+        assertThat(emailList, hasItem(endsWith("hotmail.com")))
     }
 }
